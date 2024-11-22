@@ -1,7 +1,6 @@
-# Pilih base image sesuai dengan project Anda
-FROM node:16-alpine
+# Build stage
+FROM node:16-alpine as build-stage
 
-# Set working directory
 WORKDIR /app
 
 # Copy package files
@@ -13,8 +12,18 @@ RUN npm install
 # Copy project files
 COPY . .
 
-# Expose port (sesuaikan dengan port aplikasi Anda)
-EXPOSE 3000
+# Build aplikasi
+RUN npm run build
 
-# Command untuk menjalankan aplikasi
-CMD ["npm", "start"]
+# Production stage
+FROM nginx:stable-alpine as production-stage
+
+# Copy hasil build ke nginx
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+# Copy konfigurasi nginx jika ada
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
