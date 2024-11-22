@@ -3,20 +3,11 @@ type: docker
 name: default
 
 steps:
-  - name: install
+  - name: test
     image: node:16
     commands:
-      - npm install
-    when:
-      branch:
-        - main
-      event:
-        - push
-
-  - name: build
-    image: node:16
-    commands:
-      - npm run build
+      - node -v
+      - npm -v
     when:
       branch:
         - main
