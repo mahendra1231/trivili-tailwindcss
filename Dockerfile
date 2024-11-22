@@ -1,20 +1,20 @@
-# Gunakan versi Node.js yang lebih baru
-FROM node:18
+# Pilih base image sesuai dengan project Anda
+FROM node:16-alpine
 
-# Setel direktori kerja
+# Set working directory
 WORKDIR /app
 
-# Salin package.json dan package-lock.json ke dalam container
+# Copy package files
 COPY package*.json ./
 
-# Perbarui NPM sebelum instalasi dependensi
-RUN npm install -g npm@latest
-
-# Instal dependensi
+# Install dependencies
 RUN npm install
 
-# Salin seluruh file proyek ke container
+# Copy project files
 COPY . .
 
-# Perintah default
+# Expose port (sesuaikan dengan port aplikasi Anda)
+EXPOSE 3000
+
+# Command untuk menjalankan aplikasi
 CMD ["npm", "start"]
