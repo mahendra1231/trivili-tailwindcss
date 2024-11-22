@@ -1,23 +1,20 @@
-# Gunakan Node.js versi 14 sebagai base image
-FROM node:14
+# Gunakan versi Node.js yang lebih baru
+FROM node:18
 
-# Set working directory
+# Setel direktori kerja
 WORKDIR /app
 
-# Salin file package.json dan package-lock.json
+# Salin package.json dan package-lock.json ke dalam container
 COPY package*.json ./
 
-# Install dependencies
+# Perbarui NPM sebelum instalasi dependensi
+RUN npm install -g npm@latest
+
+# Instal dependensi
 RUN npm install
 
-# Salin semua file aplikasi
+# Salin seluruh file proyek ke container
 COPY . .
 
-# Jalankan proses build untuk menghasilkan folder 'dist'
-RUN npm run build
-
-# Expose port yang digunakan aplikasi
-EXPOSE 3000
-
-# Jalankan aplikasi
+# Perintah default
 CMD ["npm", "start"]
