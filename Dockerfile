@@ -1,5 +1,5 @@
-# Build stage
-FROM node:16-alpine as builder
+# Use Node.js Alpine-based image
+FROM node:16-alpine
 
 # Set working directory
 WORKDIR /app
@@ -13,20 +13,8 @@ RUN npm install
 # Copy project files
 COPY . .
 
-# Build the application
-RUN npm run build
+# Expose port 3000 (sesuai dengan port yang digunakan di aplikasi)
+EXPOSE 3000
 
-# Production stage
-FROM nginx:alpine
-
-# Copy built files from builder stage
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy static files
-COPY *.html /usr/share/nginx/html/
-
-# Expose port 80
-EXPOSE 80
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start the application
+CMD ["node", "index.js"]
