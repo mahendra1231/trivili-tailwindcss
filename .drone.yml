@@ -3,7 +3,27 @@ type: docker
 name: default
 
 steps:
+  - name: install
+    image: node:16
+    commands:
+      - npm install
+    when:
+      branch:
+        - main
+      event:
+        - push
+
   - name: build
+    image: node:16
+    commands:
+      - npm run build
+    when:
+      branch:
+        - main
+      event:
+        - push
+
+  - name: docker_build
     image: plugins/docker
     settings:
       username:
