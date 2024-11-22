@@ -1,17 +1,17 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = 3000;
 
-// Serve static files from the "dist" directory
+// Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Define a route for the home page
+// Serve index.html when accessing the root URL
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html')); // Assuming you have an index.html in the dist folder
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // Start the server
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`App running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });
