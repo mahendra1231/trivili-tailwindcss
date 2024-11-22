@@ -1,6 +1,7 @@
 # Build stage
-FROM node:16-alpine as build-stage
+FROM node:16-alpine as builder
 
+# Set working directory
 WORKDIR /app
 
 # Copy package files
@@ -12,18 +13,20 @@ RUN npm install
 # Copy project files
 COPY . .
 
-# Build aplikasi
+# Build the application
 RUN npm run build
 
 # Production stage
-FROM nginx:stable-alpine as production-stage
+FROM nginx:alpine
 
-# Copy hasil build ke nginx
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+# Copy built files from builder stage
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy konfigurasi nginx jika ada
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy static files
+COPY *.html /usr/share/nginx/html/
 
+# Expose port 80
 EXPOSE 80
 
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
