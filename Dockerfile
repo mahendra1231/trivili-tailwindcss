@@ -7,10 +7,10 @@ WORKDIR /app
 # Copy the package.json and package-lock.json files to the container
 COPY package*.json ./
 
-# Install dependencies (express and other packages from package.json)
+# Install all dependencies listed in package.json
 RUN npm install
 
-# Copy the rest of your application code to the container
+# Copy the rest of the application code to the container
 COPY . .
 
 # Expose the port your app runs on
