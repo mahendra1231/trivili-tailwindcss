@@ -3,59 +3,59 @@ type: docker
 name: default
 
 steps:
-- name: install
-  image: node:16
-  commands:
-    - npm install
-  when:
-    event:
-      - push
-      - pull_request
+  - name: install
+    image: node:16
+    commands:
+      - npm install
+    when:
+      event:
+        - push
+        - pull_request
 
-- name: build
-  image: node:16
-  commands:
-    - npm run build
-  when:
-    event:
-      - push
-      - pull_request
+  - name: build
+    image: node:16
+    commands:
+      - npm run build
+    when:
+      event:
+        - push
+        - pull_request
 
-- name: docker
-  image: plugins/docker
-  settings:
-    username:
-      from_secret: DOCKER_USERNAME
-    password:
-      from_secret: DOCKER_PASSWORD
-    repo: mahendra968/drone-demo
-    registry: docker.io
-    tags:
-      - latest
-      - ${DRONE_COMMIT_SHA:0:7}
-  when:
-    branch:
-      - main
-    event:
-      - push
+  - name: docker
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: DOCKER_USERNAME
+      password:
+        from_secret: DOCKER_PASSWORD
+      repo: mahendra968/drone-demo
+      registry: docker.io
+      tags:
+        - latest
+        - ${DRONE_COMMIT_SHA:0:7}
+    when:
+      branch:
+        - main
+      event:
+        - push
 
-- name: deploy
-  image: appleboy/drone-ssh
-  settings:
-    host:
-      from_secret: SSH_HOST
-    username:
-      from_secret: SSH_USERNAME
-    key:
-      from_secret: ssh_key
-    port: 22
-    script:
-      - docker pull mahendra968/drone-demo:latest
-      - docker stop drone-demo || true
-      - docker rm drone-demo || true
-      - docker run -d --name drone-demo -p 80:80 mahendra968/drone-demo:latest
-  when:
-    branch:
-      - main
-    event:
-      - push
+  - name: deploy
+    image: appleboy/drone-ssh
+    settings:
+      host:
+        from_secret: SSH_HOST
+      username:
+        from_secret: SSH_USERNAME
+      key:
+        from_secret: ssh_key
+      port: 22
+      script:
+        - docker pull mahendra968/drone-demo:latest
+        - docker stop drone-demo || true
+        - docker rm drone-demo || true
+        - docker run -d --name drone-demo -p 80:80 mahendra968/drone-demo:latest
+    when:
+      branch:
+        - main
+      event:
+        - push
