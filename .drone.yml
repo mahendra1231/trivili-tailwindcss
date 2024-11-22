@@ -11,7 +11,8 @@ steps:
 - name: build
   image: node:16
   commands:
-    - npm run build
+    - npx tailwindcss -i ./src/input.css -o ./dist/output.css --minify
+
 - name: docker-build
   image: plugins/docker
   settings:
@@ -19,7 +20,7 @@ steps:
       from_secret: DOCKER_USERNAME
     password:
       from_secret: DOCKER_PASSWORD
-    repo: mahendra968/drone-demo 
+    repo: mahendra968/drone-demo  # sesuaikan dengan nama repo Anda
     tags:
       - latest
       - ${DRONE_COMMIT_SHA:0:8}
@@ -39,7 +40,7 @@ steps:
       - docker pull mahendra968/drone-demo:latest
       - docker stop drone-demo || true
       - docker rm drone-demo || true
-      - docker run -d --name drone-demo -p 80:80 mahendra968/drone-demop:latest
+      - docker run -d --name drone-demo -p 80:80 mahendra968/drone-demo:latest
 
 trigger:
   branch:
@@ -48,8 +49,28 @@ trigger:
   event:
     - push
 
-# Cache untuk mempercepat build
 volumes:
 - name: cache
   host:
     path: /tmp/cache
+
+---
+# Pipeline untuk Pull Request
+kind: pipeline
+type: docker
+name: pull-request
+
+steps:
+- name: install
+  image: node:16
+  commands:
+    - npm install
+
+- name: build
+  image: node:16
+  commands:
+    - npx tailwindcss -i ./src/input.css -o ./dist/output.css --minify
+
+trigger:
+  event:
+    - pull_request
