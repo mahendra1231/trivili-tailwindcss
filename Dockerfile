@@ -1,20 +1,20 @@
-# Use the official Node.js image
-FROM node:16
+# Use the official Node.js image as the base image
+FROM node:14
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to install dependencies
+# Copy the package.json and package-lock.json files to the container
 COPY package*.json ./
 
-# Install dependencies
+# Install dependencies (express and other packages from package.json)
 RUN npm install
 
-# Copy the rest of the application files
+# Copy the rest of your application code to the container
 COPY . .
 
-# Expose the port that the app will run on
+# Expose the port your app runs on
 EXPOSE 3000
 
-# Start the application
-CMD ["node", "index.js"]
+# Command to run the application
+CMD ["npm", "start"]
