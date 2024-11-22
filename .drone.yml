@@ -11,12 +11,17 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
       repo: mahendra968/drone-demo
+      registry: docker.io
+      dockerfile: ./Dockerfile
+      context: .
       tags:
         - latest
         - ${DRONE_COMMIT_SHA:0:7}
     when:
       branch:
         - main
+      event:
+        - push
 
   - name: deploy
     image: appleboy/drone-ssh
@@ -36,3 +41,5 @@ steps:
     when:
       branch:
         - main
+      event:
+        - push
