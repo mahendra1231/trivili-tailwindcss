@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['index.html','dist/pages'],
+  content: [
+    './index.html',
+    './dist/pages/**/*.{html,js}',
+    './booking.html',
+    './js/**/*.js'
+  ],
   theme: {
     container: {
       center: true,
@@ -13,10 +18,10 @@ module.exports = {
         secondary: '#bdb76b',
       },
       screens: {
-        '2xl': '1320px',
         'hp': '375px',
         'tablet': '640px',
         'desktop': '1024px',
+        '2xl': '1320px',
       },
     },
   },
